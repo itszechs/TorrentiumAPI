@@ -5,6 +5,7 @@ import aiohttp
 from aiohttp import ClientConnectorError
 
 import src.modules.parser.utils as utils
+from src.modules.caching.caching import Caching
 from src.modules.parser.utils import TorrentSite
 
 
@@ -14,6 +15,7 @@ class Parser:
         self.SITE = site
         self.URL = site.value
         self.__client = aiohttp.ClientSession()
+        self.caching = Caching()
 
     def __del__(self):
         try:
@@ -53,30 +55,52 @@ class Parser:
             "s": sort,
             "o": order
         }
+        params_encoded = urlencode(params)
 
-        res = await self.__get_request(
-            f"{url}/{user_uri}?{urlencode(params)}"
-        )
+        cache_key = f"{self.SITE.name}_{user_uri}_{params_encoded}"
+        cached = self.caching.get_cache(key=cache_key)
 
-        return utils.parse_site(
-            request_text=res,
-            site=self.SITE,
-            **params
-        )
+        if cached:
+            return cached
+        else:
+            res = await self.__get_request(
+                f'{url}/{user_uri}?{params_encoded}'
+            )
+            parsed = utils.parse_site(
+                request_text=res,
+                site=self.SITE,
+                **params
+            )
+            self.caching.set_cache(key=cache_key, value=parsed)
+            return parsed
 
     async def view(self, view_id: int) -> dict:
-        res = await self.__get_request(
-            f'{self.URL}/view/{view_id}'
-        )
+        cache_key = f"{self.SITE.name}_{view_id}"
+        cached = self.caching.get_cache(key=cache_key)
 
-        return utils.parse_single(res, self.SITE)
+        if cached:
+            return cached
+        else:
+            res = await self.__get_request(
+                f'{self.URL}/view/{view_id}'
+            )
+            parsed = utils.parse_single(res, self.SITE)
+            self.caching.set_cache(key=cache_key, value=parsed)
+            return parsed
 
     async def get_user(self, username: str) -> dict:
-        res = await self.__get_request(
-            f'{self.URL}/user/{username}'
-        )
+        cache_key = f"{self.SITE.name}_{username}"
+        cached = self.caching.get_cache(key=cache_key)
 
-        return utils.parse_site(res, self.SITE)
+        if cached:
+            return cached
+        else:
+            res = await self.__get_request(
+                f'{self.URL}/user/{username}'
+            )
+            parsed = utils.parse_site(res, self.SITE)
+            self.caching.set_cache(key=cache_key, value=parsed)
+            return parsed
 
     async def __get_request(self, url: str) -> str:
 

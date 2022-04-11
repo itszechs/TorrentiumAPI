@@ -40,7 +40,7 @@ def parse_downloads(downloads: List[dict]):
         try:
             eta = timedelta(seconds=int(
                 total_length - completed_length) / download_speed
-            )
+                            )
         except ZeroDivisionError:
             eta = timedelta.max
 
