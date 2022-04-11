@@ -36,10 +36,12 @@ async def aria_add(uri: str):
             return {"message": "Invalid uri"}
         try:
             gid = response['result']
-            return {"message": gid}
+            return {"message": f"Download added at gid: {gid}"}
         except KeyError:
             return {"message": response['error']['message']}
     except binascii.Error:
+        return {"message": "URI must be encoded in Base64"}
+    except UnicodeDecodeError:
         return {"message": "URI must be encoded in Base64"}
 
 
@@ -58,7 +60,7 @@ async def aria_pause(gid: str):
     response = await aria2c.pause(gid)
     try:
         gid = response['result']
-        return {"message": gid}
+        return {"message": f"Paused download at gid: {gid}"}
     except KeyError:
         return {"message": response['error']['message']}
 
@@ -75,10 +77,10 @@ async def aria_resume(gid: str):
 
         Returns `gid` of the resumed download
     """
-    response = await aria2c.pause(gid)
+    response = await aria2c.resume(gid)
     try:
         gid = response['result']
-        return {"message": gid}
+        return {"message": f"Resumed download at gid: {gid}"}
     except KeyError:
         return {"message": response['error']['message']}
 
@@ -98,7 +100,7 @@ async def aria_remove(gid: str):
     response = await aria2c.remove(gid)
     try:
         gid = response['result']
-        return {"message": gid}
+        return {"message": f"Removed download at gid: {gid}"}
     except KeyError:
         return {"message": response['error']['message']}
 

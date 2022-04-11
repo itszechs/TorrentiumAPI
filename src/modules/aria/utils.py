@@ -15,30 +15,6 @@ def human_readable_bytes(value: int) -> str:
     return f"{hr_value:.{2}f}" + f" {chosen_unit}/s"
 
 
-def human_readable_timedelta(value: timedelta) -> str:
-    pieces = []
-
-    if value.days:
-        pieces.append(f"{value.days}d")
-
-    seconds = value.seconds
-
-    if seconds >= 3600:
-        hours = int(seconds / 3600)
-        pieces.append(f"{hours}h")
-        seconds -= hours * 3600
-
-    if seconds >= 60:
-        minutes = int(seconds / 60)
-        pieces.append(f"{minutes}m")
-        seconds -= minutes * 60
-
-    if seconds > 0 or not pieces:
-        pieces.append(f"{seconds}s")
-
-    return "".join(pieces)
-
-
 def parse_downloads(downloads: List[dict]):
     new_downloads = []
     for download in downloads:
@@ -63,10 +39,10 @@ def parse_downloads(downloads: List[dict]):
 
         try:
             eta = timedelta(seconds=int(
-                total_length - completed_length) / download_speed)
-            eta = human_readable_timedelta(eta)
+                total_length - completed_length) / download_speed
+            )
         except ZeroDivisionError:
-            eta = "Inf"
+            eta = timedelta.max
 
         try:
             ratio = float(round((upload_length / completed_length), 2))
