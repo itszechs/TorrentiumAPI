@@ -38,11 +38,10 @@ def parse_downloads(downloads: List[dict]):
             percent = "0.00%"
 
         try:
-            eta = timedelta(seconds=int(
-                total_length - completed_length) / download_speed
-                            )
+            calculated_eta = (total_length - completed_length) / download_speed
+            eta = str(timedelta(seconds=int(calculated_eta)))
         except ZeroDivisionError:
-            eta = timedelta.max
+            eta = "Inf"
 
         try:
             ratio = float(round((upload_length / completed_length), 2))
