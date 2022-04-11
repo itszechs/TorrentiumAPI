@@ -60,7 +60,7 @@ async def sukebei_search(
 
 
 @router.get(
-    path="/{view_id}",
+    path="/view/{view_id}",
     response_model=TorrentResponse
 )
 async def sukebei_view(view_id: int):

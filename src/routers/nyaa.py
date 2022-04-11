@@ -60,7 +60,7 @@ async def nyaa_search(
 
 
 @router.get(
-    path="/{view_id}",
+    path="/view/{view_id}",
     response_model=TorrentResponse
 )
 async def nyaa_view(view_id: int):
