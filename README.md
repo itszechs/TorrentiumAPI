@@ -12,6 +12,10 @@ The backend for the [Torrentium](https://github.com/itsZECHS/TorrentiumApp) Andr
 
 ## Deploy on heroku
 
+Required tools
+- [git](https://git-scm.com/downloads)
+- [heroku-cli](https://devcenter.heroku.com/articles/heroku-cli)
+
 ```bash
 git clone https://github.com/itsZECHS/TorrentiumAPI.git
 cd TorrentiumAPI
