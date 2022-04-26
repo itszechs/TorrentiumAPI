@@ -25,4 +25,11 @@ aria2c --enable-rpc --rpc-listen-all=true --rpc-listen-port 6800 \
   --user-agent='qBittorrent v4.3.3' --peer-agent='qBittorrent v4.3.3' --peer-id-prefix=-qB4330- \
   --on-download-complete=/app/on_finish.sh --dir=/app/aria2 &
 
+# Ping Heroku server
+PING=true
+if $PING ; then
+    bash alive.sh &
+fi
+
+
 uvicorn src.api:app --host=0.0.0.0 --port="${PORT:-5000}"
