@@ -13,6 +13,7 @@ The backend for the [Torrentium](https://github.com/itsZECHS/TorrentiumApp) Andr
 ## Deploy on heroku
 
 Required tools
+
 - [git](https://git-scm.com/downloads)
 - [heroku-cli](https://devcenter.heroku.com/articles/heroku-cli)
 
@@ -42,6 +43,8 @@ Copy the `token` value from the output.
 - The `TEAM_DRIVE_ID` is the id of the team drive where you want to store your downloads.
 
 You can copy this from the output of `rclone config show` (above) or Google Drive's team drive page.
+
+- To avoid Heroku Sleep add `SERVER_URL` and value `<heroku app url>`
 
 ## How to use?
 
