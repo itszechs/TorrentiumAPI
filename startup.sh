@@ -6,10 +6,7 @@ mkdir -p ~/.config/rclone
 
 # Creating rclone config file
 echo "[upload]
-type = drive
-scope = drive
-token = ${RCLONE_TOKEN}
-team_drive = ${TEAM_DRIVE_ID}
+${RCLONE_REMOTE}
 " >>~/.config/rclone/rclone.conf
 
 # Starting Rclone RC Server
@@ -26,10 +23,11 @@ aria2c --enable-rpc --rpc-listen-all=true --rpc-listen-port 6800 \
   --on-download-complete=/app/on_finish.sh --dir=/app/aria2 &
 
 # Ping Heroku server
-PING=true
-if $PING ; then
-    bash alive.sh &
+if [[ -z "$APP_NAME" ]]; then
+  echo "[ ERROR ] APP_NAME is set to the empty string"
+else
+  echo "[ INFO ] Starting keep alive script..."
+  bash keep_alive.sh &
 fi
-
 
 uvicorn src.api:app --host=0.0.0.0 --port="${PORT:-5000}"
