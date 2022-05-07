@@ -12,6 +12,8 @@ The backend for the [Torrentium](https://github.com/itsZECHS/TorrentiumApp) Andr
 
 ## Deploy on heroku
 
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/itsZECHS/TorrentiumAPI)
+
 Required tools
 
 - [git](https://git-scm.com/downloads)
@@ -28,29 +30,25 @@ git push heroku main
 
 ## Set environment variables
 
-![Heroku Config Vars](https://files.catbox.moe/3x6bb7.png)
+![Heroku Config Vars](https://files.catbox.moe/a9ej8a.png)
 
-- Here `RCLONE_TOKEN` is the token from rclone config, to obtain this follow steps below
+- Here `RCLONE_REMOTE` is the token from rclone config, to obtain this follow steps below
 
-```bash
-rclone config show
-```
+- `rclone config show`
 
-![What to copy](https://files.catbox.moe/32ujgg.png)
+![What to copy](https://files.catbox.moe/btobgz.png)
 
-Copy the `token` value from the output.
+- Copy all config variables (except the remote name).
 
-- The `TEAM_DRIVE_ID` is the id of the team drive where you want to store your downloads.
-
-You can copy this from the output of `rclone config show` (above) or Google Drive's team drive page.
-
-- To avoid Heroku Sleep add `SERVER_URL` and value `<heroku app url>`
+To avoid your app from sleeping (if you're on free dyno) you can set the `APP_NAME` variable, this should be same as
+your heroku app name.
 
 ## How to use?
 
 Once deployed, you can vist [localhost](http://127.0.0.1:5000/redoc) for full documentation on the api.
 
-The intended use of this API is to be used by the Torrentium app which you can download from [here](https://github.com/itsZECHS/TorrentiumApp/releases).
+The intended use of this API is to be used by the Torrentium app which you can download
+from [here](https://github.com/itsZECHS/TorrentiumApp/releases).
 
 ## Demo
 
