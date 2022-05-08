@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from .routers import nyaa, sukebei, aria
+from .routers import nyaa, sukebei, aria, rss
 
 app = FastAPI(
     title="TorrentiumAPI",
@@ -19,3 +19,4 @@ app = FastAPI(
 app.include_router(nyaa.router)
 app.include_router(sukebei.router)
 app.include_router(aria.router)
+app.include_router(rss.router)
