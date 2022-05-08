@@ -97,7 +97,7 @@ async def aria_remove(gid: str):
 
         Returns `gid` of the removed download
     """
-    response = await aria2c.remove(gid)
+    response = await aria2c.remove(gid, files=True)
     try:
         gid = response['result']
         return {"message": f"Removed download at gid: {gid}"}

@@ -1,5 +1,7 @@
 import asyncio
+import shutil
 import uuid
+from pathlib import Path
 from typing import Any, List
 
 import aiohttp
@@ -7,6 +9,33 @@ import aiohttp
 import src.modules.aria.utils as utils
 from src.modules.aria.method import Method
 from src.modules.aria.model import AriaStats
+
+
+def remove_files(download) -> None:
+    try:
+        files = download['result']['files']
+        _dir = Path(download['result']['dir'])
+        for file in files:
+            if file['path'].startswith("[METADATA]"):
+                continue
+            try:
+                relative_path = Path(file['path']).relative_to(_dir)
+            except ValueError:
+                print(f"Can't determine file path '{file['path']}' relative to '{_dir}'")
+            else:
+                path = _dir / relative_path.parts[0]
+                if path.is_dir():
+                    try:
+                        shutil.rmtree(str(path))
+                    except OSError:
+                        print(f"Could not delete directory '{path}'")
+                else:
+                    try:
+                        path.unlink()
+                    except FileNotFoundError:
+                        print(f"File '{path}' did not exist when trying to delete it")
+    except KeyError:
+        pass
 
 
 class Aria2c:
@@ -95,8 +124,11 @@ class Aria2c:
         return await self.__post(Method.PAUSE, params=[gid])
 
     async def remove(
-            self, gid
+            self, gid, files=False
     ) -> dict:
+        if files:
+            download = await self.get_download(gid)
+            remove_files(download)
         return await self.__post(Method.REMOVE, params=[gid])
 
     async def __tell_active(self):
