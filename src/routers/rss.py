@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException
 
 from src.modules.mongodb.mongo import MongoDb
 from src.modules.rss_reader.model import MessageResponse, Subscription
+from src.modules.rss_reader.utils import verify_link
 
 if os.path.exists('.env'):
     dotenv_path = Path('.env')
@@ -40,6 +41,13 @@ async def subscribe(
             status_code=400,
             detail="Title and rss url are required"
         )
+
+    if not verify_link(rss_url):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid or Incompatible rss url"
+        )
+
     rss.upsert(data={
         "title": title,
         "rss_url": rss_url
