@@ -24,10 +24,18 @@ aria2c --enable-rpc --rpc-listen-all=true --rpc-listen-port 6800 \
 
 # Ping Heroku server
 if [[ -z "$APP_NAME" ]]; then
-  echo "[ ERROR ] APP_NAME is set to the empty string"
+  echo "[ ERROR ] APP_NAME is not set."
 else
   echo "[ INFO ] Starting keep-alive script..."
   bash keep_alive.sh &
+
+  if [[ -z "$MONGO_URL" ]]; then
+    echo "[ ERROR ] MONGO_URL is not set."
+  else
+    echo "[ INFO ] Starting RSS Reader..."
+    python3 -m src.reader &
+  fi
+
 fi
 
 uvicorn src.api:app --host=0.0.0.0 --port="${PORT:-5000}"

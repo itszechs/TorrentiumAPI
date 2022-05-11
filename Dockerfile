@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 WORKDIR /app
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Asia/Kolkata
+ENV PYTHONUNBUFFERED=True
 
 RUN apt-get -qq update && \
 apt-get -qq install -y curl git aria2 python3 wget unzip python3-pip python3-lxml
