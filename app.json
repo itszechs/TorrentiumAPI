@@ -17,5 +17,11 @@
       "required": false
     }
   },
-  "stack": "container"
+  "stack": "container",
+  "formation": {
+    "web": {
+      "quantity": 0,
+      "size": "free"
+    }
+  }
 }
