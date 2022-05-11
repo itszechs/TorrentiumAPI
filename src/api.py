@@ -13,7 +13,7 @@ app = FastAPI(
     It is a fast, simple, and powerful API for searching torrents on various sites.
     It also provides some additional functionality complementary to torrents.
     """,
-    version="1.1.1",
+    version="1.2.0",
     contact={
         "name": "zechs",
         "url": "https://itszechs.github.io/",
