@@ -3,6 +3,8 @@ from typing import Dict, List, Callable, Union
 
 import feedparser
 
+from src.modules.rss_reader.utils import verify_link, find_link
+
 
 class RssReader:
     def __init__(
@@ -26,17 +28,28 @@ class RssReader:
                 rss['entries'] = []
 
                 for entry in parse.entries:
+                    link = entry['link']
+
+                    if not verify_link(link):
+                        if find_link(entry['links']):
+                            link = find_link(entry['links'])
+                        else:
+                            continue
+
                     rss['entries'].append({
                         "title": entry['title'],
-                        "id": entry['id'],
-                        "link": entry['link'],
+                        "site": entry['id'],
+                        "torrent": link,
                         "timestamp": entry['published']
                     })
                 return rss
-            except (TypeError, KeyError):
-                return None
+            except (TypeError, KeyError) as e:
+                print("Error parsing RSS feed")
+                print(e)
         else:
-            raise Exception(f"Error parsing RSS feed: {parse.bozo_exception}")
+            print(f"Error parsing RSS feed: {parse.bozo_exception}")
+
+        return None
 
     def __subscribe(self) -> None:
         for url in self.urls:
@@ -52,9 +65,9 @@ class RssReader:
                         count += 1
 
                 if count > 0:
-                    print(f'{count} new entries found')
+                    print(f'{self.last_updated} - {count} new entries found')
                 else:
-                    print("No new entries")
+                    print(f"{self.last_updated} - No new entries")
             else:
                 print("Error parsing RSS feed")
 
