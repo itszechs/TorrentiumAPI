@@ -7,6 +7,9 @@ from typing import List
 import requests
 from dotenv import load_dotenv
 
+from src.modules.notifyfirebase.apps import Apps
+from src.modules.notifyfirebase.notification import Notification
+from src.modules.notifyfirebase.notify_api import NotifyAPI
 from src.modules.rss_reader.rss_reader import RssReader
 
 if os.path.exists('.env'):
@@ -31,6 +34,7 @@ if not MONGODB_URL:
 
 endpoint = f"http://localhost:{PORT}"
 session = requests.Session()
+notify_api = NotifyAPI()
 
 
 def update_timestamp() -> str:
@@ -76,6 +80,14 @@ def rss_add_torrent(feed: dict) -> None:
 
     if link.startswith('magnet') or link.endswith('.torrent'):
         aria_add(link)
+        notify_api.notify(
+            app=Apps.TORRENTIUM,
+            notification=Notification(
+                title="New feed",
+                body=f"\"{title}\" download started",
+                topic=f"rss_{APP_NAME}"
+            )
+        )
     else:
         print(f"Feed: \"{title}\" does not contain a magnet or torrent link. Skipping...")
 
