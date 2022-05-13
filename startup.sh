@@ -28,14 +28,13 @@ if [[ -z "$APP_NAME" ]]; then
 else
   echo "[ INFO ] Starting keep-alive script..."
   bash keep_alive.sh &
+fi
 
-  if [[ -z "$MONGO_URL" ]]; then
-    echo "[ ERROR ] MONGO_URL is not set."
-  else
-    echo "[ INFO ] Starting RSS Reader..."
-    python3 -m src.reader &
-  fi
-
+if [[ -z "$MONGO_URL" ]]; then
+  echo "[ ERROR ] MONGO_URL is not set."
+else
+  echo "[ INFO ] Starting RSS Reader..."
+  python3 -m src.reader &
 fi
 
 uvicorn src.api:app --host=0.0.0.0 --port="${PORT:-5000}"

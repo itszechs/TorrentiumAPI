@@ -15,9 +15,10 @@ if os.path.exists('.env'):
 
 APP_NAME = os.getenv('APP_NAME')
 MONGODB_URL = os.getenv('MONGODB_URL')
+PORT = os.getenv('PORT', 5000)
 
-if not APP_NAME and not MONGODB_URL:
-    print("APP_NAME and MONGODB_URL are not set.")
+if not MONGODB_URL:
+    print("MONGODB_URL are not set.")
     print("Exiting RssReader...")
 
     # exit(1)
@@ -28,7 +29,7 @@ if not APP_NAME and not MONGODB_URL:
         """
         pass
 
-endpoint = f"http://{APP_NAME}.heroku.com"
+endpoint = f"http://localhost:{PORT}"
 session = requests.Session()
 
 
@@ -60,9 +61,7 @@ def aria_add(raw_link: str) -> None:
 
     res = session.post(
         url=f"{endpoint}/api/v1/aria/add",
-        params={
-            'uri': base64_link
-        }
+        params={'uri': base64_link}
     )
     if res.status_code == 200:
         print(res.json()['message'])
