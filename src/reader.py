@@ -23,14 +23,7 @@ PORT = os.getenv('PORT', 5000)
 if not MONGODB_URL:
     print("MONGODB_URL are not set.")
     print("Exiting RssReader...")
-
-    # exit(1)
-    while True:
-        """
-        To prevent the script from exiting,
-        as heroku will restart if the script exits
-        """
-        pass
+    exit(0)
 
 endpoint = f"http://localhost:{PORT}"
 session = requests.Session()
