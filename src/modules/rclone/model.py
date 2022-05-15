@@ -16,3 +16,15 @@ class Version:
     linking: str
     os: str
     version: str
+
+
+@dataclass_json
+@dataclass
+class Remotes:
+    remotes: List[str]
+
+
+@dataclass_json
+@dataclass
+class JobsList:
+    jobids: List[int]

@@ -4,7 +4,7 @@ from typing import Dict
 import requests
 
 from src.modules.rclone.method import Method
-from src.modules.rclone.model import Version
+from src.modules.rclone.model import Version, Remotes, JobsList
 
 
 class RcloneRC:
@@ -37,3 +37,14 @@ class RcloneRC:
     def get_version(self) -> Version:
         version = self.__post(Method.CORE_VERSION)
         return Version.from_dict(version)
+
+    def list_remotes(self) -> Remotes:
+        remotes = self.__post(Method.LIST_REMOTES)
+        return Remotes.from_dict(remotes)
+
+    def get_jobs(self) -> JobsList:
+        jobs_list = self.__post(Method.JOB_LIST)
+        return JobsList.from_dict(jobs_list)
+
+    def stop_job(self, job_id: int) -> None:
+        self.__post(Method.JOB_STOP, {"jobid": job_id})
