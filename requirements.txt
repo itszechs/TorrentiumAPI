@@ -9,3 +9,4 @@ python-dotenv==0.20.0
 uvicorn==0.17.6
 dnspython==2.2.1
 requests==2.27.1
+dataclasses-json==0.5.7
