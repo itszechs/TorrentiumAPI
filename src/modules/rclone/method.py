@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, auto
 
 
 class Method(Enum):
@@ -6,3 +6,15 @@ class Method(Enum):
     LIST_REMOTES = "config/listremotes"
     JOB_LIST = "job/list"
     JOB_STOP = "job/stop"
+    SYNC_COPY = "sync/copy"
+    SYNC_MOVE = "sync/move"
+    SYNC_SYNC = "sync/sync"
+    OPERATIONS_COPYFILE = "operations/copyfile"
+    OPERATIONS_MOVEFILE = "operations/movefile"
+    OPERATIONS_LIST = "operations/list"
+
+
+class Operation(Enum):
+    COPY = auto
+    MOVE = auto
+    SYNC = auto
