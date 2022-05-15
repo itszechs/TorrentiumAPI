@@ -12,6 +12,7 @@ class Method(Enum):
     OPERATIONS_COPYFILE = "operations/copyfile"
     OPERATIONS_MOVEFILE = "operations/movefile"
     OPERATIONS_LIST = "operations/list"
+    CORE_STATS = "core/stats"
 
 
 class Operation(Enum):

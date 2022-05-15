@@ -1,10 +1,11 @@
-from typing import Any, Optional
+from typing import Any, Optional, List
 from typing import Dict
 
 import requests
 
 from src.modules.rclone.method import Method, Operation
-from src.modules.rclone.model import Version, Remotes, JobsList
+from src.modules.rclone.model import Version, Remotes, \
+    JobsList, CoreStats, Transfer
 from src.modules.rclone.utils import split_path
 
 
@@ -186,3 +187,19 @@ class RcloneRC:
             destination=destination,
             createEmptySrcDirs=createEmptySrcDirs
         )
+
+    def get_core_stats(self, group: Optional[str] = None) -> CoreStats:
+        if group is not None:
+            stats = self.__post(Method.CORE_STATS, {"group": group})
+        else:
+            stats = self.__post(Method.CORE_STATS)
+        return CoreStats.from_dict(stats)
+
+    def stats(self) -> List[Transfer]:
+        stats = self.get_core_stats()
+        transferring: List[Transfer] = []
+
+        if stats.transferring is not None:
+            transferring = stats.transferring
+
+        return transferring
