@@ -31,7 +31,7 @@ async def aria_add(uri: str):
     try:
         decoded_uri = base64.b64decode(uri).decode("utf-8")
         try:
-            response = await aria2c.add_uri(uris=[decoded_uri])
+            response = aria2c.add_uri(uris=[decoded_uri])
         except TypeError:
             return {"message": "Invalid uri"}
         try:
@@ -57,7 +57,7 @@ async def aria_pause(gid: str):
 
         Returns `gid` of the paused download
     """
-    response = await aria2c.pause(gid)
+    response = aria2c.pause(gid)
     try:
         gid = response['result']
         return {"message": f"Paused download at gid: {gid}"}
@@ -77,7 +77,7 @@ async def aria_resume(gid: str):
 
         Returns `gid` of the resumed download
     """
-    response = await aria2c.resume(gid)
+    response = aria2c.resume(gid)
     try:
         gid = response['result']
         return {"message": f"Resumed download at gid: {gid}"}
@@ -97,7 +97,7 @@ async def aria_remove(gid: str):
 
         Returns `gid` of the removed download
     """
-    response = await aria2c.remove(gid, files=True)
+    response = aria2c.remove(gid, files=True)
     try:
         gid = response['result']
         return {"message": f"Removed download at gid: {gid}"}
@@ -110,7 +110,7 @@ async def aria_downloads():
     """
         Returns list of all downloads
     """
-    return await aria2c.get_downloads()
+    return aria2c.get_downloads()
 
 
 @router.get(path="/stats", response_model=AriaStatsResponse)
@@ -119,8 +119,8 @@ async def aria_stats():
         Returns storage stats, aria2c stats and data usages
     """
 
-    info = await aria2c.get_global_stat()
-    version = await aria2c.get_version()
+    info = aria2c.get_global_stat()
+    version = aria2c.get_version()
     total, used, free = shutil.disk_usage('.')
 
     try:
