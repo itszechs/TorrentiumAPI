@@ -1,5 +1,5 @@
-from typing import Any, Optional, List
 from typing import Dict
+from typing import Optional, List
 
 import requests
 
@@ -23,7 +23,7 @@ class RcloneRC:
 
         self.__session = requests.Session()
 
-    def __post(self, method: Method, params: Dict[Any] = None):
+    def __post(self, method: Method, params: Dict = None):
         url = self.host
 
         if self.port is not None:
