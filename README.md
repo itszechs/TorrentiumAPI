@@ -12,7 +12,7 @@ The backend for the [Torrentium](https://github.com/itsZECHS/TorrentiumApp) Andr
 
 ## Deploy on heroku
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/itsZECHS/TorrentiumAPI)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/cruxx1/TorrentiumAPI)
 
 Required tools
 
