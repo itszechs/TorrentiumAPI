@@ -20,3 +20,15 @@ class NotifyAPI:
             print("Notification sent.")
         else:
             print(f"Notification failed with error code {notify.status_code}")
+
+    def notify_torrentium(self, notification: Notification) -> None:
+        self.notify(
+            app=Apps.TORRENTIUM,
+            notification=notification
+        )
+
+    def notify_zplex(self, notification: Notification) -> None:
+        self.notify(
+            app=Apps.ZPLEX,
+            notification=notification
+        )
