@@ -1,5 +1,6 @@
 import os
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -36,9 +37,8 @@ mongo = MongoDb(
 
 
 def update_timestamp() -> str:
-    return time.strftime(
-        "%a, %d %b %Y %H:%M:%S -0000",
-        time.gmtime()
+    return datetime.now().strftime(
+        "%a, %d %b %Y %H:%M:%S -0000"
     )
 
 
