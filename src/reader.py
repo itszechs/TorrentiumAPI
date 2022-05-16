@@ -1,4 +1,3 @@
-import base64
 import os
 import time
 from pathlib import Path
@@ -7,7 +6,8 @@ from typing import List
 import requests
 from dotenv import load_dotenv
 
-from src.modules.notifyfirebase.apps import Apps
+from src.modules.aria.aria2c import Aria2c
+from src.modules.mongodb.mongo import MongoDb
 from src.modules.notifyfirebase.notification import Notification
 from src.modules.notifyfirebase.notify_api import NotifyAPI
 from src.modules.rss_reader.rss_reader import RssReader
@@ -25,9 +25,14 @@ if not MONGODB_URL:
     print("Exiting RssReader...")
     exit(0)
 
-endpoint = f"http://localhost:{PORT}"
 session = requests.Session()
 notify_api = NotifyAPI()
+aria2c = Aria2c()
+mongo = MongoDb(
+    server_url=MONGODB_URL,
+    db_name="Torrentium",
+    collection_name="rss_feeds"
+)
 
 
 def update_timestamp() -> str:
@@ -38,32 +43,22 @@ def update_timestamp() -> str:
 
 
 def get_feeds() -> List[str]:
-    feeds = []
-    res = session.get(
-        url=f"{endpoint}/api/v1/rss/subscriptions"
-    )
-    if res.status_code == 200:
-        for feed in res.json():
-            feeds.append(feed['rss_url'])
-        print("Rss feeds fetched successfully")
-    else:
-        print("Error fetching rss feeds")
-        print(res.text)
-
-    return feeds
+    return [
+        feed['rss_url']
+        for feed in mongo.query()
+    ]
 
 
 def aria_add(raw_link: str) -> None:
-    base64_link = base64.b64encode(raw_link.encode('utf-8'))
-
-    res = session.post(
-        url=f"{endpoint}/api/v1/aria/add",
-        params={'uri': base64_link}
-    )
-    if res.status_code == 200:
-        print(res.json()['message'])
-    else:
-        print(f"Error adding magnet link: {res.status_code}")
+    try:
+        response = aria2c.add_uri(uris=[raw_link])
+        try:
+            gid = response['result']
+            print(f"Download added at gid: {gid}")
+        except KeyError:
+            print(response['error']['message'])
+    except TypeError:
+        print("Invalid uri")
 
 
 def rss_add_torrent(feed: dict) -> None:
@@ -73,8 +68,7 @@ def rss_add_torrent(feed: dict) -> None:
 
     if link.startswith('magnet') or link.endswith('.torrent'):
         aria_add(link)
-        notify_api.notify(
-            app=Apps.TORRENTIUM,
+        notify_api.notify_torrentium(
             notification=Notification(
                 title="New feed",
                 body=f"\"{title}\" download started",
