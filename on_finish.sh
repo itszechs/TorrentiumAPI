@@ -11,7 +11,6 @@ fi
 
 while true; do
 
-    MONTH_YEAR_FOLDER=$(date +'%B - %Y')
     DOWNLOAD_NAME=$(echo "$3" | cut -d'/' -f4)
     SOURCE_PATH=$(echo "$3" | cut -d'/' -f-4)
 
@@ -19,25 +18,11 @@ while true; do
 
     if [ -d "${SOURCE_PATH}" ]; then
         echo "$(date)" "INFO " "$SOURCE_PATH" moved as "$DOWNLOAD_NAME"
-        DESTINATION="${MONTH_YEAR_FOLDER}/Folders/${DOWNLOAD_NAME}"
-
-        rclone rc sync/move \
-            srcFs="${SOURCE_PATH}" \
-            dstFs="upload:/${DESTINATION}" \
-            _async="true" deleteEmptySrcDirs="true"
-
+        python3 -m src.uploader "$1" "$DOWNLOAD_NAME" "$SOURCE_PATH" &
         exit $?
     elif [ -f "${SOURCE_PATH}" ]; then
         echo "$(date)" "INFO: " "$3" moved as "$DOWNLOAD_NAME"
-        DESTINATION="${MONTH_YEAR_FOLDER}/Files/${DOWNLOAD_NAME}"
-
-        rclone rc operations/movefile \
-            srcFs="/app/aria2" \
-            srcRemote="${DOWNLOAD_NAME}" \
-            dstFs="upload:" \
-            dstRemote="/${DESTINATION}" \
-            _async="true"
-
+        python3 -m src.uploader "$1" "$DOWNLOAD_NAME" &
         exit $?
     else
         echo "well, if it is not a file or a folder then it probably doesn't exist"
