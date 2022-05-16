@@ -4,7 +4,9 @@ from typing import Tuple
 
 
 def split_path(path: str) -> Tuple[str, str]:
-    if path.startswith("/"):
+    _path = path
+
+    if _path.startswith("/"):
         remote = "/"
     else:
         try:
@@ -12,8 +14,6 @@ def split_path(path: str) -> Tuple[str, str]:
             remote += ":"
         except ValueError:
             remote = os.getcwd()
-
-    _path = path.replace(os.getcwd(), "")
 
     if remote != "/":
         _path = _path.replace(remote, "")
