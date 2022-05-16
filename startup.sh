@@ -2,6 +2,7 @@
 
 # Create download folder & rclone folder
 mkdir -p /app/aria2
+mkdir -p /app/zplex
 mkdir -p ~/.config/rclone
 
 # Creating rclone config file

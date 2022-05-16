@@ -51,7 +51,12 @@ def get_feeds() -> List[str]:
 
 def aria_add(raw_link: str) -> None:
     try:
-        response = aria2c.add_uri(uris=[raw_link])
+        response = aria2c.add_uri(
+            uris=[raw_link],
+            options={
+                "dir": "/app/zplex"
+            }
+        )
         try:
             gid = response['result']
             print(f"Download added at gid: {gid}")
