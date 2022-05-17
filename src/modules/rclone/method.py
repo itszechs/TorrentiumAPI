@@ -16,6 +16,6 @@ class Method(Enum):
 
 
 class Operation(Enum):
-    COPY = auto
-    MOVE = auto
-    SYNC = auto
+    COPY = auto()
+    MOVE = auto()
+    SYNC = auto()
