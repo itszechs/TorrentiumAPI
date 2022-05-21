@@ -38,4 +38,9 @@ else
     python3 -m src.reader &
 fi
 
+# Start Jackett
+./Jackett/jackett &
+sleep 5
+python3 -m src.setup_jackett
+
 uvicorn src.api:app --host=0.0.0.0 --port="${PORT:-5000}"
