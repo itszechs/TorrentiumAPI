@@ -66,11 +66,16 @@ class MongoDb:
             Insert data into the collection
             if it does not exist, otherwise update it
         """
-        self.__collection.update_one(
-            data,
-            {"$set": data},
-            upsert=True
-        )
+        try:
+            object_id = ObjectId(data["feed_id"])
+            data.pop("feed_id")
+            self.__collection.update_one(
+                {"_id": object_id},
+                {"$set": data},
+                upsert=True
+            )
+        except KeyError:
+            self.insert(data)
 
     def insert(self, data: dict) -> Any:
         """

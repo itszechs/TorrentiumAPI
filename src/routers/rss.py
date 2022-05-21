@@ -1,13 +1,15 @@
+import json
 import os
 from pathlib import Path
 from typing import List
 
 from dotenv import load_dotenv
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
+from fastapi import Response
 
+from src.modules.mongodb.model import Feed
 from src.modules.mongodb.mongo import MongoDb
 from src.modules.rss_reader.model import MessageResponse, Subscription
-from src.modules.rss_reader.utils import verify_link
 
 if os.path.exists('.env'):
     dotenv_path = Path('.env')
@@ -29,30 +31,30 @@ router = APIRouter(
     path="/subscribe",
     response_model=MessageResponse
 )
-async def subscribe(
-        title: str,
-        rss_url: str
-):
+async def subscribe(feed: Feed):
     """
     Subscribe to a rss feed
     """
-    if not title or not rss_url:
-        raise HTTPException(
-            status_code=400,
-            detail="Title and rss url are required"
+    if not feed.title or not feed.rssUrl:
+        return Response(
+            content=json.dumps({"message": "Missing title or rss url"}),
+            status_code=400
         )
 
-    if not verify_link(rss_url):
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid or Incompatible rss url"
-        )
+    data = {
+        "title": feed.title,
+        "rss_url": feed.rssUrl
+    }
 
-    rss.upsert(data={
-        "title": title,
-        "rss_url": rss_url
-    })
-    return {"message": "Subscribed"}
+    if feed.feedId is not None:
+        data["feed_id"] = feed.feedId
+
+    rss.upsert(data)
+
+    return Response(
+        content=json.dumps({"message": "Subscribed"}),
+        status_code=200
+    )
 
 
 @router.post(
@@ -64,19 +66,22 @@ async def unsubscribe(feed_id: str):
     Unsubscribe to a rss feed
     """
     if not feed_id:
-        raise HTTPException(
-            status_code=400,
-            detail="Feed id is required"
+        return Response(
+            content=json.dumps({"message": "Feed id is required"}),
+            status_code=400
         )
 
     res = rss.delete(feed_id)
 
     if res:
-        return {"message": "Unsubscribed"}
-
-    raise HTTPException(
+        return Response(
+            content=json.dumps({"message": "Unsubscribed"}),
+            status_code=200
+        )
+    return Response(
+        content=json.dumps({"message": "Rss feed not found"}),
         status_code=404,
-        detail="Rss feed not found"
+
     )
 
 
