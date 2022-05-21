@@ -39,8 +39,20 @@ async def post(
     except exceptions.JSONDecodeError:
         content = None
 
+    headers = dict(request.headers)
+
+    try:
+        headers['Content-Type'] = j.headers["Content-Type"]
+    except KeyError:
+        pass
+
+    try:
+        headers['Location'] = j.headers["Location"]
+    except KeyError:
+        pass
+
     return Response(
-        content=content, headers=j.headers,
+        content=content, headers=headers,
         status_code=j.status_code
     )
 
@@ -59,7 +71,19 @@ async def get(
     except exceptions.JSONDecodeError:
         content = None
 
+    headers = dict(request.headers)
+
+    try:
+        headers['Content-Type'] = j.headers["Content-Type"]
+    except KeyError:
+        pass
+
+    try:
+        headers['Location'] = j.headers["Location"]
+    except KeyError:
+        pass
+
     return Response(
-        content=content, headers=j.headers,
+        content=content, headers=headers,
         status_code=j.status_code
     )
