@@ -64,7 +64,7 @@ async def get(
 ):
     j = jackett.get(
         endpoint=f"/{full_path}",
-        params=dict(request.query_params),
+        params=request.url.query
     )
     try:
         content = json.dumps(j.json())
