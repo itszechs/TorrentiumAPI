@@ -35,12 +35,24 @@ class JackettApi:
         if not endpoint.startswith("/"):
             raise ValueError("Endpoint must start with a /")
 
-        return self.session.request(
-            method=method,
-            url=f"{self.jackett_api}{endpoint}",
-            json=json,
-            params=params
-        )
+        try:
+            response = self.session.request(
+                method=method,
+                url=f"{self.jackett_api}{endpoint}",
+                json=json,
+                params=params
+            )
+            return response
+        except requests.exceptions.InvalidSchema:
+            # to deal with magnet-uri redirects
+            response = self.session.request(
+                method=method,
+                url=f"{self.jackett_api}{endpoint}",
+                json=json,
+                params=params,
+                allow_redirects=False
+            )
+            return response
 
     def get(
             self, endpoint,
