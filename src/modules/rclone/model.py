@@ -3,6 +3,7 @@ from datetime import timedelta
 from typing import List, Optional
 
 from dataclasses_json import dataclass_json
+from pydantic.main import BaseModel
 
 from src.modules.rclone.utils import human_readable_bytes
 
@@ -99,3 +100,18 @@ class CoreStats:
     transfers: int
     eta: Optional[int] = None
     transferring: Optional[List[Transfer]] = None
+
+
+class TransferResponse(BaseModel):
+    name: str
+    size: int
+    bytes: Optional[int] = None
+    speed: Optional[float] = None
+    percentage: Optional[str] = None
+    eta: Optional[int] = None
+    group: Optional[str] = None
+    size_human: str
+    bytes_human: str
+    progress: str
+    speed_human: str
+    eta_human: str
