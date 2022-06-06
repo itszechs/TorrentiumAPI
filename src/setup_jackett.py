@@ -12,9 +12,10 @@ if os.path.exists(".env"):
     dotenv_path = Path(".env")
     load_dotenv(dotenv_path=dotenv_path)
 
-default_trackers = ["1337x", "eztv", "kickasstorrents-to",
-                    "limetorrents", "nyaasi", "rarbg", "rutracker-ru",
-                    "sukebeinyaasi", "thepiratebay", "torrentfunk", "yts"]
+default_trackers = ["eztv", "kickasstorrents-to", "limetorrents",
+                    "nyaasi", "rarbg", "rutracker-ru",
+                    "sukebeinyaasi", "thepiratebay", "yts"]
+
 if os.getenv("TRACKERS_LIST"):
     list_of_trackers = os.getenv("TRACKERS_LIST").split(",")
 else:
