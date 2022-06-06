@@ -4,7 +4,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import FastAPI
 
-from .routers import nyaa, sukebei, aria, jackett
+from .routers import nyaa, sukebei, aria, \
+    jackett, rclone
 
 app = FastAPI(
     title="TorrentiumAPI",
@@ -36,3 +37,4 @@ else:
     print("MONGODB_URL is not set, rss router not included")
 
 app.include_router(jackett.router)
+app.include_router(rclone.router)
